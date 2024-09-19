@@ -6,6 +6,9 @@ import Lab3 from "./Lab3";
 export default function Labs() {
     return (
         <div>
+            <h3>Name: Apurva Saini</h3>
+            <h3>Section: 20596</h3>
+            <h3><a href="https://github.com/apps-037/kanbas-react-web-app">Source Code Link</a></h3>
             <h1>Labs</h1>
             <TOC />
             <Routes>
