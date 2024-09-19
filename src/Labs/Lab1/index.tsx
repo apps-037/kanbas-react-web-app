@@ -40,7 +40,14 @@ export default function Lab1() {
                 </ol>
                 My favorite recipe:
                 <ol id="wd-your-favorite-recipe">
-                    {/* complete on your own */}
+                    <li>Crack eggs into a bowl.</li>
+                    <li>Whisk eggs with a pinch of salt and pepper.</li>
+                    <li>Heat a non-stick skillet over medium heat.</li>
+                    <li>Add butter and let it melt.</li>
+                    <li>Pour eggs into the skillet.</li>
+                    <li>Stir gently and cook until softly scrambled.</li>
+                    <li>Remove from heat while slightly runny.</li>
+                    <li>Serve and enjoy!</li>
                 </ol>
                 <h5>Unordered List Tag</h5>
                 My favorite books (in no particular order)
@@ -53,9 +60,12 @@ export default function Lab1() {
                 </ul>
                 Your favorite books (in no particular order)
                 <ul id="wd-your-books">
-                    {/* complete on your own */}
+                    <li>1984 by George Orwell</li>
+                    <li>To Kill a Mockingbird by Harper Lee</li>
+                    <li>Brave New World by Aldous Huxley</li>
+                    <li>The Catcher in the Rye by J.D. Salinger</li>
+                    <li>Neuromancer by William Gibson</li>
                 </ul>
-
             </div>
             <div id="wd-tables">
                 <h4>Table Tag</h4>
