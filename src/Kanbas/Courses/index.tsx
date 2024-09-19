@@ -17,7 +17,7 @@ export default function Courses() {
           <td valign="top">
             <Routes>
               <Route path="/"
-                     element={<Navigate to="Home" />} />
+                element={<Navigate to="Home" />} />
               <Route path="Home" element={<Home />} />
               <Route path="Modules" element={<Modules />} />
               <Route path="Assignments" element={<Assignments />} />
@@ -28,4 +28,5 @@ export default function Courses() {
         </tr>
       </table>
     </div>
-);}
+  );
+}
