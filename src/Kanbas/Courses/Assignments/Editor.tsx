@@ -1,112 +1,131 @@
 export default function AssignmentEditor() {
     return (
-        <div id="wd-assignments-editor">
-            <label htmlFor="wd-name">Assignment Name</label>
-            <input id="wd-name" value="A1 - ENV + HTML" /><br /><br />
-            <textarea
-                id="wd-description"
-                style={{ height: '150px', width: '300px' }}
-            >
-                The assignment is available online. Submit a link to the landing page of
-            </textarea>
-            <br />
-            <table>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-points">Points</label>
-                    </td>
-                    <td>
-                        <input id="wd-points" value={100} />
-                    </td>
-                </tr>
-                <br></br>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-assignments">Assignment Group</label>
-                    </td>
-                    <td>
-                        <select id="wd-select-one-genre">
-                            <option value="COMEDY">Comedy</option>
-                            <option value="DRAMA">Drama</option>
-                            <option selected value="SCIFI">
-                                Science Fiction</option>
-                            <option value="FANTASY">Fantasy</option>
-                        </select>
-                    </td>
-                </tr>
-                <br></br>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-assignments">Display Grade As</label>
-                    </td>
-                    <td>
-                        <select id="wd-select-one-genre">
-                            <option value="COMEDY">Comedy</option>
-                            <option value="DRAMA">Drama</option>
-                            <option selected value="SCIFI">
-                                Science Fiction</option>
-                            <option value="FANTASY">Fantasy</option>
-                        </select>
-                    </td>
-                </tr>
-                <br></br>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-assignments">Submission Type</label>
-                    </td>
-                    <td>
-                        <select id="wd-select-one-genre">
-                            <option value="COMEDY">Comedy</option>
-                            <option value="DRAMA">Drama</option>
-                            <option selected value="SCIFI">
-                                Science Fiction</option>
-                            <option value="FANTASY">Fantasy</option>
-                        </select>
-                        <br></br>
-                        <br></br>
-                        <label htmlFor="">Online Entry Options</label><br></br>
-                        <input type="checkbox" name="check-genre" id="wd-chkbox-comedy" />
-                        <label htmlFor="wd-chkbox-comedy">Comedy</label><br />
+        <div id="wd-assignments-editor" className="container">
+            <div className="mb-3">
+                <label htmlFor="wd-name" className="form-label">Assignment Name</label>
+                <input
+                    type="text"
+                    className="form-control ps-5"
+                    id="wd-name"
+                    placeholder=""
+                />
+            </div>
+            <div className="mb-3">
+                <textarea
+                    id="wd-description"
+                    className="form-control ps-5"
+                    style={{ height: '250px' }}
+                    placeholder="The assignment is available online. Submit a link to the landing page of your Web application running on Netlify..."
+                />
+            </div>
+            <table className="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td className="text-end">
+                            <label htmlFor="wd-points" className="form-label">Points</label>
+                        </td>
+                        <td>
+                            <input id="wd-points" className="form-control" value={100} />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="text-end">
+                            <label htmlFor="wd-assignments" className="form-label">Online Entry Options</label>
+                        </td>
+                        <td>
+                            <select id="wd-select-one-group" className="form-select">
+                                <option value="COMEDY">Text Entry</option>
+                                <option value="DRAMA">Website URL</option>
+                                <option selected value="SCIFI">Media Recordings</option>
+                                <option value="FANTASY">Student Annotations</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="text-end">
+                            <label htmlFor="wd-display-grade" className="form-label">Display Grade As</label>
+                        </td>
+                        <td>
+                            <select id="wd-select-display-grade" className="form-select">
+                                <option value="COMEDY">Text Entry</option>
+                                <option value="DRAMA">Website URL</option>
+                                <option selected value="SCIFI">Media Recordings</option>
+                                <option value="FANTASY">Student Annotations</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="text-end">
+                            <label htmlFor="wd-submission-type" className="form-label me-3">Submission Type</label>
+                        </td>
+                        <td>
+                            <div className="d-flex align-items-start">
+                                <div className="card flex-fill">
+                                    <div className="card-body">
+                                        <select id="wd-select-submission-type" className="form-select mb-3">
+                                            <option value="COMEDY">Text Entry</option>
+                                            <option value="DRAMA">Website URL</option>
+                                            <option selected value="SCIFI">Media Recordings</option>
+                                            <option value="FANTASY">Student Annotations</option>
+                                        </select>
+                                        <div>
+                                            <label className="form-label">Online Entry Options</label><br />
+                                            <div>
+                                                <input type="checkbox" name="check-genre" id="wd-chkbox-comedy" />
+                                                <label htmlFor="wd-chkbox-comedy" className="ms-1">Text Entry</label><br />
 
-                        <input type="checkbox" name="check-genre" id="wd-chkbox-drama" />
-                        <label htmlFor="wd-chkbox-drama">Drama</label><br />
+                                                <input type="checkbox" name="check-genre" id="wd-chkbox-drama" />
+                                                <label htmlFor="wd-chkbox-drama" className="ms-1">Website URL</label><br />
 
-                        <input type="checkbox" name="check-genre" id="wd-chkbox-scifi" />
-                        <label htmlFor="wd-chkbox-scifi">Science Fiction</label><br />
+                                                <input type="checkbox" name="check-genre" id="wd-chkbox-scifi" />
+                                                <label htmlFor="wd-chkbox-scifi" className="ms-1">Media Recordings</label><br />
 
-                        <input type="checkbox" name="check-genre" id="wd-chkbox-fantasy" />
-                        <label htmlFor="wd-chkbox-fantasy">Fantasy</label>
-                    </td>
-                </tr>
-                <br></br>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-assignments">Assign</label>
-                    </td>
-                    <label htmlFor="">Assign to</label><br />
-                    <input id="wd-points" value={"Everyone"} /> <br />
-                    <br />
-                    <label htmlFor="wd-assignments">Due</label><br />
-                    <input type="date"
-                        id="wd-text-fields-dob"
-                        value="2000-01-21" /><br /> <br />
-                    <div style={{ display: 'flex', gap: '20px' }}>
-                        <label htmlFor="wd-assignments">Available From</label>
-                        <label htmlFor="wd-assignments">Until</label>
-                    </div>
-                    <input type="date"
-                        id="wd-text-fields-dob"
-                        value="2000-01-21" />
-                    <input type="date"
-                        id="wd-text-fields-dob"
-                        value="2000-01-21" /><br /> <br />
-                </tr>
+                                                <input type="checkbox" name="check-genre" id="wd-chkbox-fantasy" />
+                                                <label htmlFor="wd-chkbox-fantasy" className="ms-1">Student Annotations</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td className="text-end">
+                            <label htmlFor="wd-display-grade" className="form-label me-3">Assign</label>
+                        </td>
+                        <td>
+                            <div className="d-flex align-items-start">
+                                <div className="card flex-fill">
+                                    <div className="card-body">
+                                        <div className="mb-3">
+                                            <label htmlFor="wd-assign-to" className="form-label">Assign to</label>
+                                            <input id="wd-assign-to" className="form-control" value={"Everyone"} readOnly />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="wd-due-date" className="form-label">Due</label>
+                                            <input type="date" id="wd-due-date" className="form-control" value="2000-01-21" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <div className="d-flex align-items-center">
+                                                <label htmlFor="" className="me-2">Available From</label>
+                                                <input type="date" className="form-control me-3" />
+                                                <label htmlFor="" className="me-2">Until</label>
+                                                <input type="date" className="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
             <hr />
-            <td align="right">
-                <button id="wd-add-assignment-group">Cancel</button>
-                <button id="wd-add-assignment">Save</button>
-            </td>
+            <div className="text-end mt-3">
+                <button id="wd-add-assignment-group" className="btn btn-secondary">Cancel</button>
+                <button id="wd-add-assignment" className="btn btn-danger">Save</button>
+            </div>
         </div>
     );
 }

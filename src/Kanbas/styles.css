@@ -44,15 +44,16 @@ body * {
     background-color: transparent; 
 }
 
-.list-group-item {
-    border: none;
-    padding: 10px 0;
+/**/
+.table {
+    border-collapse: collapse; 
 }
 
-#wd-account-navigation {
-    border: 20px solid white;
+.table td {
+    border: none; 
 }
 
-.no-underline {
-    text-decoration: none;
+.card {
+    border: 1px solid #ced4da; 
+    border-radius: 0.5rem; 
 }
