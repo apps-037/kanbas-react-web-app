@@ -9,8 +9,7 @@ import AdditionCheck from "./AdditionCheck";
 
 export default function Modules() {
   const { cid } = useParams();
-  const courseIds = db.courses.map(course => course._id);
-  console.log(courseIds);
+  console.log(cid);
   const modules = db.modules;
   return (
     <div>
@@ -18,7 +17,7 @@ export default function Modules() {
       {/* Dynamically generated modules list */}
       <ul id="wd-modules" className="list-group rounded-0">
         {modules
-          .filter((module: any) => courseIds.includes(module.course))  // Filter modules by course
+          .filter((module: any) => (module.course) === cid)  // Filter modules by course
           .map((module: any) => (
             <li key={module._id} className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
               <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">

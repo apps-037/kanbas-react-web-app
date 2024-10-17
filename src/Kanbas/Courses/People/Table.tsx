@@ -4,7 +4,6 @@ import * as db from "../../Database";
 export default function PeopleTable() {
     const { cid } = useParams();
     const { users, enrollments } = db;
-    const courseIds = db.courses.map(course => course._id);
     return (
         <div id="wd-people-table">
             <table className="table table-striped">
@@ -14,7 +13,7 @@ export default function PeopleTable() {
                 <tbody>
                     {users
                         .filter((usr) =>
-                            enrollments.some((enrollment) => enrollment.user === usr._id && courseIds.includes(enrollment.course))
+                            enrollments.some((enrollment) => enrollment.user === usr._id && (enrollment.course) === cid)
                         )
                         .map((user: any) => (
                             <tr key={user._id}>
