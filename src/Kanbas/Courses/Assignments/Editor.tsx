@@ -7,13 +7,8 @@ export default function AssignmentEditor() {
     return (
         <div id="wd-assignments-editor" className="container">
             <div className="mb-3">
-                <label htmlFor="wd-name" className="form-label">{assignment && assignment.title}</label>
-                <input
-                    type="text"
-                    className="form-control ps-5"
-                    id="wd-name"
-                    placeholder=""
-                />
+                <label htmlFor="wd-name" className="form-label">Assignment Name</label>
+                <input value={assignment?.title} className="form-control mb-2" />
             </div>
             <div className="mb-3">
                 <textarea

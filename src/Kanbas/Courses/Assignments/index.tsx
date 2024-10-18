@@ -5,6 +5,8 @@ import ModulesControls from "./ModulesControlButtons";
 import * as db from "../../Database";
 import { IoEllipsisVertical } from "react-icons/io5";
 import AdditionCheck from "../Modules/AdditionCheck";
+import { FaNoteSticky, FaPadlet, FaPenClip } from "react-icons/fa6";
+import { FaPencilAlt, FaPlaneDeparture, FaRegEdit } from "react-icons/fa";
 
 export default function Assignments() {
     const { cid } = useParams();
@@ -35,6 +37,7 @@ export default function Assignments() {
                             .map((assignment: any) => (
                                 <li className="wd-lesson list-group-item p-3 ps-1 d-flex align-items-start">
                                     <BsGripVertical className="me-2 fs-3" />
+                                    <FaPencilAlt className="me-2" />
                                     <div className="flex-grow-1">
                                         <a className="wd-assignment-link" href={`#/Kanbas/Courses/${assignment.course}/Assignments/${assignment._id}`}>
                                             {assignment.title}
