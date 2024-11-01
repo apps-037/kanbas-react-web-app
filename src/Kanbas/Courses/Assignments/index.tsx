@@ -1,19 +1,75 @@
 import { BsGripVertical } from "react-icons/bs";
 import { useParams } from "react-router-dom";
-import LessonControlButtons from "../Modules/LessonControlButtons";
+import LessonControlButtons from "./LessonControlButtons";
 import ModulesControls from "./ModulesControlButtons";
-import * as db from "../../Database";
-import { IoEllipsisVertical } from "react-icons/io5";
-import AdditionCheck from "../Modules/AdditionCheck";
-import { FaNoteSticky, FaPadlet, FaPenClip } from "react-icons/fa6";
-import { FaPencilAlt, FaPlaneDeparture, FaRegEdit } from "react-icons/fa";
+import { IoEllipsisVertical, IoTrashOutline } from "react-icons/io5";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { addAssignment, deleteAssignment, updateAssignment } from "./reducer";
+import { Modal, Button } from "react-bootstrap";
 
 export default function Assignments() {
     const { cid } = useParams();
-    const assignments = db.assignments;
+    const { assignments } = useSelector((state: any) => state.assignmentReducer);
+    const [assignmentTitle, setAssignmentTitle] = useState("");
+    const [assignmentDescription, setAssignmentDescription] = useState("");
+    const [points, setPoints] = useState<number>(0);
+    const [assignmentDue, setAssignmentDue] = useState("");
+    const [assignmentUntil, setAssignmentUntil] = useState("");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
+
+    const dispatch = useDispatch();
+
+    // Function to handle opening the delete confirmation modal
+    const handleDeleteClick = (assignmentId: any) => {
+        setSelectedAssignmentId(assignmentId);
+        setShowDeleteModal(true);
+    };
+
+    // Function to confirm deletion of assignment
+    const confirmDelete = () => {
+        if (selectedAssignmentId) {
+            dispatch(deleteAssignment(selectedAssignmentId));
+        }
+        setShowDeleteModal(false);
+    };
+
+    // Function to cancel deletion
+    const cancelDelete = () => {
+        setShowDeleteModal(false);
+        setSelectedAssignmentId(null);
+    };
+
     return (
         <div id="wd-assignments">
-            <ModulesControls /> <br />
+            <ModulesControls
+                setAssignmentTitle={setAssignmentTitle}
+                assignmentTitle={assignmentTitle}
+                assignmentDescription={assignmentDescription}
+                setAssignmentDescription={setAssignmentDescription}
+                points={points}
+                setPoints={setPoints}
+                assignmentDue={assignmentDue}
+                setAssignmentDue={setAssignmentDue}
+                assignmentUntil={assignmentUntil}
+                setAssignmentUntil={setAssignmentUntil}
+                addAssignment={() => {
+                    dispatch(addAssignment({
+                        title: assignmentTitle,
+                        description: assignmentDescription,
+                        points: points,
+                        due: assignmentDue,
+                        until: assignmentUntil,
+                        course: cid
+                    }));
+                    setAssignmentTitle("");
+                    setAssignmentDescription("");
+                    setPoints(0);
+                    setAssignmentDue("");
+                    setAssignmentUntil("");
+                }} /> <br />
             <ul id="wd-modules" className="list-group rounded-0">
                 <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary">
@@ -27,7 +83,7 @@ export default function Assignments() {
                                 marginRight: '10px'
                             }}>
                                 40% of Total </a>
-                            <AdditionCheck />
+                            {/* <AdditionCheck /> */}
                             <IoEllipsisVertical className="fs-4" />
                         </div>
                     </div>
@@ -43,16 +99,48 @@ export default function Assignments() {
                                             {assignment.title}
                                         </a>
                                         <div className="text-start">
-                                            <span className="text-danger">Multiple Modules</span> | <b>Not Available until</b> May 20 6:00 PM <br />
-                                            Due May 25 3:00 PM | 100 pts
+                                            <span className="text-danger">{assignment.description}</span> | <b>Not Available until</b> {assignment.until} <br />
+                                            Due {assignment.due} | {assignment.points} pts
                                         </div>
                                     </div>
-                                    <LessonControlButtons />
+                                    <div className="d-flex align-items-center justify-content-end">
+                                        <FaTrash
+                                            className="text-danger me-3 cursor-pointer"
+                                            onClick={() => handleDeleteClick(assignment._id)}
+                                            style={{ fontSize: "1.2rem" }} // Optional size adjustment
+                                        />
+                                        <LessonControlButtons
+                                            assignmentId={assignment._id}
+                                            updateAssignment={() => dispatch(updateAssignment({
+                                                title: assignmentTitle,
+                                                description: assignmentDescription,
+                                                points: points,
+                                                due: assignmentDue,
+                                                until: assignmentUntil,
+                                                course: cid
+                                            }))}
+                                        />
+                                    </div>
                                 </li>
                             ))}
                     </ul>
                 </li>
             </ul>
+
+            <Modal show={showDeleteModal} onHide={cancelDelete}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to delete this assignment?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={cancelDelete}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={confirmDelete}>
+                        Yes, Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
