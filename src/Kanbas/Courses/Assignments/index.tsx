@@ -6,7 +6,7 @@ import { IoEllipsisVertical, IoTrashOutline } from "react-icons/io5";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { addAssignment, deleteAssignment, updateAssignment } from "./reducer";
+import { addAssignment, deleteAssignment } from "./reducer";
 import { Modal, Button } from "react-bootstrap";
 
 export default function Assignments() {
@@ -110,15 +110,6 @@ export default function Assignments() {
                                             style={{ fontSize: "1.2rem" }} // Optional size adjustment
                                         />
                                         <LessonControlButtons
-                                            assignmentId={assignment._id}
-                                            updateAssignment={() => dispatch(updateAssignment({
-                                                title: assignmentTitle,
-                                                description: assignmentDescription,
-                                                points: points,
-                                                due: assignmentDue,
-                                                until: assignmentUntil,
-                                                course: cid
-                                            }))}
                                         />
                                     </div>
                                 </li>
@@ -127,6 +118,7 @@ export default function Assignments() {
                 </li>
             </ul>
 
+            {/* Delete Confirmation Modal */}
             <Modal show={showDeleteModal} onHide={cancelDelete}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Delete</Modal.Title>
