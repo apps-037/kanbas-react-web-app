@@ -11,4 +11,6 @@ export default function TodoItem({ todo }: {
                 id="wd-delete-todo-click"> Delete </button>
         <button onClick={() => dispatch(setTodo(todo))}
                 id="wd-set-todo-click"> Edit </button>
+        <button onClick={() => dispatch(setTodo(todo))}
+                id="wd-set-todo-click"> Enroll </button>
         {todo.title}    </li>);}
