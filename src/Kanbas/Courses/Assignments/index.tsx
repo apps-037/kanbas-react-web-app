@@ -110,6 +110,21 @@ export default function Assignments() {
                                             style={{ fontSize: "1.2rem" }} // Optional size adjustment
                                         />
                                         <LessonControlButtons
+                                        // editAssignment={() => {
+                                        //     dispatch(editAssignment({
+                                        //         title: assignmentTitle,
+                                        //         description: assignmentDescription,
+                                        //         points: points,
+                                        //         due: assignmentDue,
+                                        //         until: assignmentUntil,
+                                        //         course: cid
+                                        //     }));
+                                        //     setAssignmentTitle("");
+                                        //     setAssignmentDescription("");
+                                        //     setPoints(0);
+                                        //     setAssignmentDue("");
+                                        //     setAssignmentUntil("");
+                                        // }}
                                         />
                                     </div>
                                 </li>

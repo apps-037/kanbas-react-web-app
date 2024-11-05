@@ -1,9 +1,5 @@
 import { FaPlus } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
-import { setCurrentUser } from "../../Account/reducer";
-import * as db from "../../Database";
-import { useState } from "react";
-import { useNavigate } from "react-router";
 import AddAssignmentEditor from "./AddAssignmentEditor";
 
 export default function ModulesControls(
