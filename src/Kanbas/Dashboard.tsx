@@ -30,6 +30,7 @@ export default function Dashboard(
       console.error(error);
     }
   };
+  console.log(enrollments);
   useEffect(() => {
     fetchEnrollments();
   }, [currentUser]);
