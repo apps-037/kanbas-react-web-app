@@ -5,9 +5,11 @@ import ModulesControls from "./ModulesControlButtons";
 import { IoEllipsisVertical, IoTrashOutline } from "react-icons/io5";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { addAssignment, deleteAssignment } from "./reducer";
+import { useEffect, useState } from "react";
+import { addAssignment, deleteAssignment, setAssignments } from "./reducer";
 import { Modal, Button } from "react-bootstrap";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 export default function Assignments() {
     const { cid } = useParams();
@@ -22,10 +24,17 @@ export default function Assignments() {
 
     const dispatch = useDispatch();
 
-    // Function to handle opening the delete confirmation modal
-    const handleDeleteClick = (assignmentId: any) => {
-        setSelectedAssignmentId(assignmentId);
-        setShowDeleteModal(true);
+    const fetchAssignments = async () => {
+        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+
+    const removeAssignment = async (assignmentId: string) => {
+        await assignmentsClient.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
     };
 
     // Function to confirm deletion of assignment
@@ -106,25 +115,10 @@ export default function Assignments() {
                                     <div className="d-flex align-items-center justify-content-end">
                                         <FaTrash
                                             className="text-danger me-3 cursor-pointer"
-                                            onClick={() => handleDeleteClick(assignment._id)}
+                                            onClick={() => removeAssignment(assignment._id)}
                                             style={{ fontSize: "1.2rem" }} // Optional size adjustment
                                         />
                                         <LessonControlButtons
-                                        // editAssignment={() => {
-                                        //     dispatch(editAssignment({
-                                        //         title: assignmentTitle,
-                                        //         description: assignmentDescription,
-                                        //         points: points,
-                                        //         due: assignmentDue,
-                                        //         until: assignmentUntil,
-                                        //         course: cid
-                                        //     }));
-                                        //     setAssignmentTitle("");
-                                        //     setAssignmentDescription("");
-                                        //     setPoints(0);
-                                        //     setAssignmentDue("");
-                                        //     setAssignmentUntil("");
-                                        // }}
                                         />
                                     </div>
                                 </li>
