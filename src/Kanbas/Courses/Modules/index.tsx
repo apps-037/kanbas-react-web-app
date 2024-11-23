@@ -2,7 +2,6 @@ import LessonControlButtons from "./LessonControlButtons";
 import ModulesControls from "./ModulesControls";
 import { BsGripVertical } from 'react-icons/bs';
 import { useParams } from "react-router";
-import * as db from "../../Database";
 import GreenCheckmark from "./GreenCheckmark";
 import { IoAdd, IoEllipsisVertical } from "react-icons/io5";
 import AdditionCheck from "./AdditionCheck";
