@@ -16,7 +16,7 @@ export default function Kanbas() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const fetchCourses = async () => {
         try {
-            const courses = await userClient.findMyCourses();
+            const courses = await userClient.findMyCourses(currentUser._id);
             setCourses(courses);
         } catch (error) {
             console.error(error);
