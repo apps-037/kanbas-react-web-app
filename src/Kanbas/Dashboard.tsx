@@ -23,21 +23,21 @@ export default function Dashboard(
 
   console.log(courses);
 
-  const filteredCourses = showAllCourses
-    ? courses
-    : courses.filter((course) =>
-      enrollments.some(
-        (enrollment: any) =>
-          enrollment.user === currentUser._id
-      )
-    );
+  // const filteredCourses = showAllCourses
+  //   ? courses
+  //   : courses.filter((course) =>
+  //     enrollments.some(
+  //       (enrollment: any) =>
+  //         enrollment.user === currentUser._id
+  //     )
+  //   );
 
-  const isEnrolled = (courseId: any) => {
-    return enrollments.some(
-      (enrollment: any) =>
-        enrollment.user === currentUser._id
-    );
-  };
+  // const isEnrolled = (courseId: any) => {
+  //   return enrollments.some(
+  //     (enrollment: any) =>
+  //       enrollment.user === currentUser._id
+  //   );
+  // };
 
   return (
     <div id="wd-dashboard">
@@ -62,7 +62,7 @@ export default function Dashboard(
       )}
 
       <h2 id="wd-dashboard-published">
-        Published Courses ({filteredCourses.length})
+        Published Courses ({courses.length})
         {currentUser.role === "STUDENT" && (
           <button
             className="btn btn-primary float-end"
@@ -75,7 +75,7 @@ export default function Dashboard(
 
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {filteredCourses.map((course) => (
+          {courses.map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
 
@@ -86,7 +86,7 @@ export default function Dashboard(
                   <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                     {course.description} </p>
 
-                  {currentUser.role === "FACULTY" && isEnrolled(course._id) && (
+                  {currentUser.role === "FACULTY" && (
                     <>
                       <Link to={`/Kanbas/Courses/${course._id}/Home`}
                         className="wd-dashboard-course-link text-decoration-none text-dark" >
@@ -111,14 +111,14 @@ export default function Dashboard(
                     </>
                   )}
 
-                  {currentUser.role === "STUDENT" && isEnrolled(course._id) && (
+                  {currentUser.role === "STUDENT" && (
                     <button id="wd-unenroll" className="btn btn-danger me-2 float-end"
                       onClick={() => dispatch(deleteEnrollment({ user: currentUser._id, course: course._id }))}>
                       Unenroll
                     </button>
                   )}
 
-                  {currentUser.role === "STUDENT" && !isEnrolled(course._id) && (
+                  {currentUser.role === "STUDENT" && (
                     <button id="wd-enroll" className="btn btn-success me-2 float-end"
                       onClick={() => dispatch(addEnrollment({ user: currentUser._id, course: course._id }))}>
                       Enroll
