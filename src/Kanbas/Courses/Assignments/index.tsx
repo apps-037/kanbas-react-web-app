@@ -32,6 +32,19 @@ export default function Assignments() {
         fetchAssignments();
     }, []);
 
+    const createAssignmentForCourse = async () => {
+        if (!cid) return;
+        const newModule = { 
+            title: assignmentTitle, 
+            description: assignmentDescription, 
+            availableDateTime: assignmentUntil,
+            dueDateTime: assignmentDue,
+            points: points, 
+            course: cid };
+        const assignment = await coursesClient.createAssignmentForCourse(cid, newModule);
+        dispatch(addAssignment(assignment));
+      };
+
     const removeAssignment = async (assignmentId: string) => {
         await assignmentsClient.deleteAssignment(assignmentId);
         dispatch(deleteAssignment(assignmentId));
@@ -64,21 +77,9 @@ export default function Assignments() {
                 setAssignmentDue={setAssignmentDue}
                 assignmentUntil={assignmentUntil}
                 setAssignmentUntil={setAssignmentUntil}
-                addAssignment={() => {
-                    dispatch(addAssignment({
-                        title: assignmentTitle,
-                        description: assignmentDescription,
-                        points: points,
-                        due: assignmentDue,
-                        until: assignmentUntil,
-                        course: cid
-                    }));
-                    setAssignmentTitle("");
-                    setAssignmentDescription("");
-                    setPoints(0);
-                    setAssignmentDue("");
-                    setAssignmentUntil("");
-                }} /> <br />
+                addAssignment={createAssignmentForCourse}
+                
+                /> <br />
             <ul id="wd-modules" className="list-group rounded-0">
                 <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary">
