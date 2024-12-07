@@ -8,6 +8,11 @@ import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa6";
 import PeopleTables from "./People";
 import AddAssignmentEditor from "./Assignments/AddAssignmentEditor";
+import Quiz from "./Quizzes";
+import QuizEditor from "./Quizzes/QuizEditor";
+import QuestionEditor from "./Quizzes/QuizEditor/Questions/QuestionEditor";
+import QuizDetail from "./Quizzes/QuizDetail";
+import QuizPreview from "./Quizzes/QuizPreview";
 
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
@@ -29,6 +34,11 @@ export default function Courses({ courses }: { courses: any[]; }) {
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="People" element={<PeopleTables />} />
+            <Route path="Quizzes" element={<Quiz />} />
+            <Route path="Quizzes/:quizId/QuizEditor/*" element={<QuizEditor/>} />
+            <Route path="Quizzes/:quizId/QuizEditor/questions/:questionId" element={<QuestionEditor/>} />
+            <Route path="Quizzes/:quizId" element={<QuizDetail/>} />
+            <Route path="Quizzes/:quizId/QuizPreview" element={<QuizPreview/>} />
           </Routes>
         </div></div>
     </div>

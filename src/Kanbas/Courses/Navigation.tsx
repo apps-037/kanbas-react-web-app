@@ -11,7 +11,7 @@ export default function CoursesNavigation() {
             <Link id="wd-course-zoom-link" to="/Kanbas/Courses/1234/Zoom" className="list-group-item text-danger border border-0">Zoom</Link>
             <Link id="wd-course-quizzes-link" to={`/Kanbas/Courses/${cid}/Assignments`} className="list-group-item text-danger border border-0">
                 Assignments</Link>
-            <Link id="wd-course-assignments-link" to="/Kanbas/Courses/1234/Quizzes" className="list-group-item text-danger border border-0">Quizzes
+            <Link id="wd-course-assignments-link" to={`/Kanbas/Courses/${cid}/Quizzes`} className="list-group-item text-danger border border-0">Quizzes
             </Link>
             <Link id="wd-course-grades-link" to="/Kanbas/Courses/1234/Grades" className="list-group-item text-danger border border-0">Grades</Link>
             <Link id="wd-course-people-link" to={`/Kanbas/Courses/${cid}/People`} className="list-group-item text-danger border border-0">People</Link>
