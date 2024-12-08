@@ -12,7 +12,7 @@ import mongoose from "mongoose";
 function QuizQuestion() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { quizId, courseId } = useParams();
+  const { cid, quizId } = useParams();
   const questionList = useSelector(
     (state: KanbasState) => state.questionsReducer.questions
   );
@@ -34,12 +34,12 @@ function QuizQuestion() {
       quizId,
       type: "MultipleChoice"
     };
-    const res = await client.createQuestion(quizId, newReq);
+    // const res = await client.createQuestion(quizId, newReq);
     dispatch(setQuestion(newReq));
     dispatch(setText(newReq.question));
     dispatch(setQuestions([...questionList, newReq]));
     navigate(
-      `/Kanbas/Courses/${courseId}/Quizzes/${quizId}/QuizEditor/questions/${newReq.id}`
+      `/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions/${newReq.id}`
     );
   };
 

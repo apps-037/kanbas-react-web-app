@@ -18,7 +18,7 @@ import * as client from "../client";
 
 function QuestionEditor() {
   const navigate = useNavigate();
-  const { courseId, quizId } = useParams();
+  const { cid, quizId } = useParams();
 
   const dispatch = useDispatch();
   const [questionType, setQuestionType] = useState("MultipleChoice");
@@ -51,13 +51,13 @@ function QuestionEditor() {
     var response = await client.updateQuestion(question);
     dispatch(updateQuestion(question));
     navigate(
-      `/Kanbas/Courses/${courseId}/Quizzes/${quizId}/QuizEditor/questions`
+      `/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions`
     );
     //navigate back to the question list
   };
 
   const cancelQues = () => {
-    navigate(`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/QuizEditor/questions`);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions`);
   }
 
   const checkType = () => {
