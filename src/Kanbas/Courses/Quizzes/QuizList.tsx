@@ -29,14 +29,6 @@ export default function QuizList() {
     navigate(`/Kanbas/Courses/${cid}/Quizzes/QuizDetail/QuizEditor/details`);
   };
 
-  const formatDate = (dateString: string | number | Date) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-
   const handleDeleteQuiz = async (quizId: string) => {
     const res = await client.deleteQuiz(quizId);
     dispatch(deleteQuiz(quizId));
@@ -80,17 +72,30 @@ export default function QuizList() {
     );
   };
 
-  const handleAvailabiltiy = (quiz : any) => {
-    if (quiz.availableUntilDate && formatDate(new Date()) > quiz.availableUntilDate) {
+  const handleAvailabiltiy = (quiz: any) => {
+    const today = new Date();
+    const formattedToday = formatDate(today);
+  
+    const availableFromDate = new Date(quiz.availableFromDate);
+    const availableUntilDate = new Date(quiz.availableUntilDate);
+  
+    if (quiz.availableUntilDate && formattedToday > formatDate(availableUntilDate)) {
       return 'Closed';
-    } else if (quiz.availableFromDate && quiz.availableUntilDate && formatDate(new Date()) >= quiz.availableFromDate && formatDate(new Date()) <= quiz.availableUntilDate) {
+    } else if (quiz.availableFromDate && quiz.availableUntilDate && formattedToday >= formatDate(availableFromDate) && formattedToday <= formatDate(availableUntilDate)) {
       return 'Available';
-    } else if (quiz.availableFromDate && formatDate(new Date()) < quiz.availableFromDate) {
-      return `Not available until ${formatDate(quiz.availableFromDate)}`; // Use toDateString() for a readable format
+    } else if (quiz.availableFromDate && formattedToday < formatDate(availableFromDate)) {
+      return `Not available until ${formatDate(availableFromDate)}`;
     } else {
       return 'Not available';
     }
-  }
+  };
+  
+  const formatDate = (date: Date) => {
+    if (!(date instanceof Date)) {
+      date = new Date(date);
+    }
+    return date.toISOString().split('T')[0]; // Returns date in YYYY-MM-DD format
+  };
 
   return (
     <div className="col me-2">
