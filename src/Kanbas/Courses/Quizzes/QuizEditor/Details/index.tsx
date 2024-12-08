@@ -57,6 +57,7 @@ function QuizDetail() {
             value={quiz?.title}
             className="form-control mb-2"
             style={{ width: "auto-content" }}
+            placeholder="Title"
             onChange={(e) => {
               dispatch(setQuiz({ ...quiz, title: e.target.value }));
             }}
@@ -65,6 +66,7 @@ function QuizDetail() {
           <textarea
             value={quiz.description}
             className="form-control mb-2"
+            placeholder="Description"
             onChange={(e) => {
               dispatch(setQuiz({ ...quiz, description: e.target.value }));
             }}

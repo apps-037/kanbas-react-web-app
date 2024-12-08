@@ -3,6 +3,7 @@ import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 import { FaChalkboardUser, FaRegCircleUser } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
 import { FaArrowAltCircleRight, FaCalendar, FaHistory, FaInbox, FaQuestionCircle } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { IoCalendarOutline } from "react-icons/io5";
 export default function KanbasNavigation() {
     const { pathname } = useLocation();
@@ -12,6 +13,7 @@ export default function KanbasNavigation() {
         { label: "Calendar", path: "/Kanbas/Calendar", icon: IoCalendarOutline },
         { label: "Inbox", path: "/Kanbas/Inbox", icon: FaInbox },
         { label: "Labs", path: "/Labs", icon: LiaCogSolid },
+        { label: "Landing Page", path: "/LandingPage", icon: FaHome },
     ];
     return (
         <div id="wd-kanbas-navigation" style={{ width: 120 }}

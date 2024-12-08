@@ -245,3 +245,212 @@ const textBox = useSelector((state: KanbasState) => state.textBoxReducer.textBox
 };
 
 export default TextEditor;
+
+
+
+
+
+
+
+
+
+// import React, { useRef, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { FaBold, FaRegKeyboard } from "react-icons/fa";
+// import { GoItalic } from "react-icons/go";
+// import { FiUnderline } from "react-icons/fi";
+// import { MdFormatColorText, MdOutlineRotateRight } from "react-icons/md";
+// import { BiHighlight } from "react-icons/bi";
+// import { RiSuperscript2 } from "react-icons/ri";
+// import { HiOutlineEllipsisVertical, HiMiniCodeBracket } from "react-icons/hi2";
+// import { PiArrowsOutSimple, PiDotsSixVertical } from "react-icons/pi";
+// import { KanbasState } from "../../store"; // Adjust path if necessary
+// import { setText } from "./reducer";
+ 
+// interface TextEditorProps {
+//   textData: string;
+// }
+ 
+// const TextEditor: React.FC<TextEditorProps> = ({ textData }) => {
+//   const [fontSize, setFontSize] = useState("16px");
+//   const [isBold, setIsBold] = useState(false);
+//   const [isItalic, setIsItalic] = useState(false);
+//   const [isUnderline, setIsUnderline] = useState(false);
+//   const [textColor, setTextColor] = useState("#000000");
+//   const [highlightColor, setHighlightColor] = useState("transparent"); // Default to transparent
+//   const [isSuperscript, setIsSuperscript] = useState(false);
+//   const [wordCount, setWordCount] = useState(0);
+ 
+//   const highlightColorPickerRef = useRef<HTMLInputElement>(null);
+//   const dispatch = useDispatch();
+//   const textBox = useSelector((state: KanbasState) => state.textBoxReducer.textBox);
+ 
+//   const toggleBold = () => setIsBold(!isBold);
+//   const toggleItalics = () => setIsItalic(!isItalic);
+//   const toggleUnderline = () => setIsUnderline(!isUnderline);
+//   const toggleSuperscript = () => setIsSuperscript(!isSuperscript);
+ 
+//   const handleFontSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+//     setFontSize(event.target.value);
+//   };
+ 
+//   const handleHighlightButtonClick = () => {
+//     if (highlightColorPickerRef.current) {
+//       highlightColorPickerRef.current.click();
+//     }
+//   };
+ 
+//   return (
+//     <div style={{ padding: "10px", fontFamily: "Arial, sans-serif" }}>
+//       {/* Toolbar */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "space-between",
+//           alignItems: "center",
+//           marginBottom: "10px",
+//         }}
+//       >
+//         {/* Left-side toolbar options */}
+//         <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+//           <span style={{ cursor: "pointer" }}>Edit</span>
+//           <span style={{ cursor: "pointer" }}>View</span>
+//           <span style={{ cursor: "pointer" }}>Insert</span>
+//           <span style={{ cursor: "pointer" }}>Format</span>
+//           <span style={{ cursor: "pointer" }}>Tools</span>
+//           <span style={{ cursor: "pointer" }}>Table</span>
+//         </div>
+ 
+//         {/* Right-side toolbar options */}
+//         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+//           <MdOutlineRotateRight style={{ color: "green", fontSize: "20px" }} />
+//           <span>100%</span>
+//         </div>
+//       </div>
+ 
+//       {/* Formatting Options */}
+//       <div
+//         id="formattingOptions"
+//         style={{
+//           display: "flex",
+//           alignItems: "center",
+//           gap: "15px",
+//           borderBottom: "1px solid #ccc",
+//           paddingBottom: "10px",
+//           marginBottom: "10px",
+//         }}
+//       >
+//         <select
+//           id="fontSizeSelect"
+//           onChange={handleFontSizeChange}
+//           value={fontSize}
+//           style={{
+//             border: "none", // Remove border
+//             outline: "none",
+//             background: "none",
+//             fontSize: "16px",
+//             cursor: "pointer",
+//           }}
+//         >
+//           <option value="12px">12px</option>
+//           <option value="14px">14px</option>
+//           <option value="16px">16px</option>
+//           <option value="18px">18px</option>
+//         </select>
+ 
+//         <select
+//           id="paraType"
+//           style={{
+//             border: "none", // Remove border
+//             outline: "none",
+//             background: "none",
+//             fontSize: "16px",
+//             cursor: "pointer",
+//           }}
+//         >
+//           <option value="paragraph">Paragraph</option>
+//         </select>
+ 
+//         <FaBold onClick={toggleBold} style={{ cursor: "pointer" }} />
+//         <GoItalic onClick={toggleItalics} style={{ cursor: "pointer" }} />
+//         <FiUnderline onClick={toggleUnderline} style={{ cursor: "pointer" }} />
+//         <MdFormatColorText
+//           onClick={() => setTextColor("#0000FF")}
+//           style={{ cursor: "pointer" }}
+//         />
+ 
+//         <BiHighlight onClick={handleHighlightButtonClick} style={{ cursor: "pointer" }} />
+//         <input
+//           ref={highlightColorPickerRef}
+//           type="color"
+//           onChange={(e) => setHighlightColor(e.target.value)}
+//           style={{ display: "none" }}
+//         />
+ 
+//         <RiSuperscript2 onClick={toggleSuperscript} style={{ cursor: "pointer" }} />
+//         <HiOutlineEllipsisVertical style={{ cursor: "pointer" }} />
+//       </div>
+ 
+//       {/* Textarea */}
+//       <textarea
+//         value={textBox.text}
+//         onChange={(e) => {
+//           dispatch(setText(e.target.value));
+//           const words = e.target.value.trim().split(/\s+/);
+//           setWordCount(e.target.value.trim() === "" ? 0 : words.length);
+//         }}
+//         id="textInput"
+//         placeholder="Enter your text here..."
+//         style={{
+//           width: "100%",
+//           height: "200px",
+//           padding: "10px",
+//           border: "1px solid #ccc",
+//           borderRadius: "4px",
+//           resize: "none",
+//           color: textColor,
+//           backgroundColor: highlightColor,
+//           fontSize,
+//           fontWeight: isBold ? "bold" : "normal",
+//           fontStyle: isItalic ? "italic" : "normal",
+//           textDecoration: isUnderline ? "underline" : "none",
+//           verticalAlign: isSuperscript ? "super" : "baseline",
+//         }}
+//       />
+ 
+//       {/* Word Count */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "space-between",
+//           alignItems: "center",
+//           marginTop: "10px",
+//         }}
+//       >
+//         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+//           <FaRegKeyboard style={{ color: "red" }} />
+//           <span style={{ color: "red" }}>{wordCount} words</span>
+//         </div>
+ 
+//         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+//           <HiMiniCodeBracket style={{ color: "red" }} />
+//           <PiArrowsOutSimple style={{ color: "red" }} />
+//           <div
+//             style={{
+//               border: "1px solid red",
+//               borderRadius: "4px",
+//               padding: "2px 4px",
+//               display: "flex",
+//               alignItems: "center",
+//               cursor: "pointer",
+//             }}
+//           >
+//             <PiDotsSixVertical />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+ 
+// export default TextEditor;
