@@ -12,7 +12,8 @@ export default function Signin() {
     const user =  await client.signin(credentials);
     if (!user) return;
     dispatch(setCurrentUser(user));
-    navigate("/Kanbas/Dashboard");
+    // navigate("/Kanbas/Dashboard");
+    navigate("/Kanbas/Account/Profile");
   };
 
   return (

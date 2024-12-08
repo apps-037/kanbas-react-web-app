@@ -17,6 +17,7 @@ export default function QuizList() {
   const { cid, quizId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   console.log(cid);
   useEffect(() => {
     client.findQuizForCourse(cid).then((quizzes) => {
@@ -55,9 +56,10 @@ export default function QuizList() {
   const [menuVisible, setMenuVisible] = useState<MenuVisibleState>({});
   /// const [published, setPublished] = useState(false); // State to track the published status
 
-  const handleEditQuiz = () => {
+  const handleEditQuiz = (quiz: any) => {
     console.log("Navigating to Quiz Details screen");
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/QuizEditor`);
+    dispatch(setQuiz(quiz));
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/QuizEditor/details`);
   };
 
   const handleDelete = () => {
@@ -147,20 +149,19 @@ export default function QuizList() {
                     <FaRocket style={{ color: "green" }} />
                   </div>
                   <div className="col wd-fg-color-gray ps-0 ms-2">
-                    <Link
-                      onClick={(e) => dispatch(setQuiz(quiz))}
-                      style={{ color: "green", textDecoration: "none" }}
-                      className="fw-bold ps-0"
-                      to={`${quiz._id}`}
-                    >
-                      {/* Q1 - HTML */}
-                      {quiz.title}
-                    </Link>
-                    <br />
-                    {handleAvailabiltiy(quiz)} |<b> Due</b> {formatDate(quiz.dueDate)} |{" "}
-                    {quiz.points} pts | {quiz.questions.length} Questions
-                    {/* Sep 21 at 1pm | 29 pts | 11 questions */}
-                  </div>
+                        {currentUser.role === "FACULTY" ? <Link
+                          onClick={(e) => dispatch(setQuiz(quiz))}
+                          style={{ color: "green", textDecoration: "none" }}
+                          className="fw-bold ps-0"
+                          to={`${quiz._id}`}
+                        >
+                          {quiz.title}
+                        </Link> : <b>{quiz.title}</b>}
+                        <br />
+                        {handleAvailabiltiy(quiz)} |<b> Due</b> {formatDate(quiz.dueDate)} |{" "}
+                        {quiz.points} pts | {quiz.questions.length} Questions
+                        {/* Sep 21 at 1pm | 29 pts | 11 questions */}
+                      </div>
                   <div
                     className="col-auto"
                     style={{ margin: "auto", display: "flex" }}
@@ -215,7 +216,7 @@ export default function QuizList() {
                               zIndex: 1000,
                             }}
                           >
-                            <option onClick={handleEditQuiz}>Edit</option>
+                            <option onClick={() => handleEditQuiz(quiz)}>Edit</option>
                             <option
                               onClick={() => {
                                 if (handleDelete()) {
