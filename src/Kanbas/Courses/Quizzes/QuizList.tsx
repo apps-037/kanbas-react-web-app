@@ -75,10 +75,10 @@ export default function QuizList() {
   const handleAvailabiltiy = (quiz: any) => {
     const today = new Date();
     const formattedToday = formatDate(today);
-  
+
     const availableFromDate = new Date(quiz.availableFromDate);
     const availableUntilDate = new Date(quiz.availableUntilDate);
-  
+
     if (quiz.availableUntilDate && formattedToday > formatDate(availableUntilDate)) {
       return 'Closed';
     } else if (quiz.availableFromDate && quiz.availableUntilDate && formattedToday >= formatDate(availableFromDate) && formattedToday <= formatDate(availableUntilDate)) {
@@ -89,7 +89,7 @@ export default function QuizList() {
       return 'Not available';
     }
   };
-  
+
   const formatDate = (date: Date) => {
     if (!(date instanceof Date)) {
       date = new Date(date);
@@ -139,112 +139,122 @@ export default function QuizList() {
               <b>Assignment Quizzes</b>
             </div>
           </li>
-            {(quizList.length === 0 ||  quizList === null ) ? 
-            (<div style = {{borderStyle: "solid", textAlign: "center", marginTop: "10px", marginLeft: "200px", marginRight: "200px"}}>
+          {(quizList.length === 0 || quizList === null) ?
+            (<div style={{ borderStyle: "solid", textAlign: "center", marginTop: "10px", marginLeft: "200px", marginRight: "200px" }}>
               No quizzes available. Click on Add Quiz Button to create a quiz.
             </div>) : (
-          <ul className="list-group" style={{ borderRadius: "0%" }}>
-            {quizList.map((quiz) => (
-              <li className="list-group-item">
-                <div className="row">
-                  <div
-                    className="col-auto"
-                    style={{ margin: "auto", display: "flex" }}
-                  >
-                    <FaRocket style={{ color: "green" }} />
-                  </div>
-                  <div className="col wd-fg-color-gray ps-0 ms-2">
-                        {currentUser.role === "FACULTY" ? <Link
+              <ul className="list-group" style={{ borderRadius: "0%" }}>
+                {quizList.map((quiz) => (
+                  <li className="list-group-item">
+                    <div className="row">
+                      <div
+                        className="col-auto"
+                        style={{ margin: "auto", display: "flex" }}
+                      >
+                        <FaRocket style={{ color: "green" }} />
+                      </div>
+                      <div className="col wd-fg-color-gray ps-0 ms-2">
+                        {/* {currentUser.role === "FACULTY" ? <Link
                           onClick={(e) => dispatch(setQuiz(quiz))}
                           style={{ color: "green", textDecoration: "none" }}
                           className="fw-bold ps-0"
                           to={`${quiz._id}`}
                         >
                           {quiz.title}
-                        </Link> : <b>{quiz.title}</b>}
+                        </Link> : <b>{quiz.title}</b>} */}
+
+                        <Link
+                          onClick={(e) => dispatch(setQuiz(quiz))}
+                          style={{ color: "green", textDecoration: "none" }}
+                          className="fw-bold ps-0"
+                          to={currentUser.role === "FACULTY" ? `${quiz._id}` : `${quiz._id}/QuizPreview`}
+                        >
+                          {quiz.title}
+                        </Link>
                         <br />
                         {handleAvailabiltiy(quiz)} |<b> Due</b> {formatDate(quiz.dueDate)} |{" "}
                         {quiz.points} pts | {quiz.questions.length} Questions
                         {/* Sep 21 at 1pm | 29 pts | 11 questions */}
                       </div>
-                  <div
-                    className="col-auto"
-                    style={{ margin: "auto", display: "flex" }}
-                  >
-                    {quiz.published ? (
-                      <FaCheckCircle
-                        className="ms-4"
-                        style={{
-                          color: "green",
-                          cursor: "pointer",
-                          verticalAlign: "middle",
-                          marginTop: "5px",
-                        }}
-                        onClick={() => handleTogglePublish(quiz)}
-                      />
-                    ) : (
-                      <FaBan
-                        className="ms-4"
-                        style={{
-                          color: "red",
-                          cursor: "pointer",
-                          verticalAlign: "middle",
-                          marginTop: "5px",
-                        }}
-                        onClick={() => handleTogglePublish(quiz)}
-                      />
-                    )}
-
-                    <div
-                      className="dropdown"
-                      style={{ position: "relative", display: "inline-block" }}
-                    >
-                      <a>
-                        <FaEllipsisV
-                          className="ms-4"
-                          role="button"
-                          style={{ verticalAlign: "middle" }}
-                          onClick={() => toggleMenu(quiz)}
-                        />
-                        {menuVisible[quiz._id] && (
-                          <div
-                            className="menu"
+                      <div
+                        className="col-auto"
+                        style={{ margin: "auto", display: "flex" }}
+                      >
+                        {quiz.published ? (
+                          <FaCheckCircle
+                            className="ms-4"
                             style={{
-                              position: "absolute",
-                              top: "100%",
-                              left: "-50%",
-                              border: "1px solid #ccc",
-                              borderRadius: "4px",
-                              backgroundColor: "white",
-                              padding: "8px",
-                              opacity: 0.9,
-                              zIndex: 1000,
+                              color: "green",
+                              cursor: "pointer",
+                              verticalAlign: "middle",
+                              marginTop: "5px",
                             }}
-                          >
-                            <option onClick={() => handleEditQuiz(quiz)}>Edit</option>
-                            <option
-                              onClick={() => {
-                                if (handleDelete()) {
-                                  handleDeleteQuiz(quiz._id);
-                                }
-                              }}
-                            >
-                              Delete
-                            </option>
-                            <option onClick={() => handleTogglePublish(quiz)}>
-                              {quiz.published ? "Unpublish" : "Publish"}{" "}
-                            </option>
-                          </div>
+                            onClick={() => currentUser.role === "FACULTY" && handleTogglePublish(quiz)}
+                          />
+                        ) : (
+                          <FaBan
+                            className="ms-4"
+                            style={{
+                              color: "red",
+                              cursor: "pointer",
+                              verticalAlign: "middle",
+                              marginTop: "5px",
+                            }}
+                            onClick={() => currentUser.role === "FACULTY" && handleTogglePublish(quiz)}
+                          />
                         )}
-                      </a>
-                    </div>
 
-                    <div className="dropdown"></div>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul> ) }
+                        {currentUser.role === "FACULTY" &&
+                          <div
+                            className="dropdown"
+                            style={{ position: "relative", display: "inline-block" }}
+                          >
+                            <a>
+                              <FaEllipsisV
+                                className="ms-4"
+                                role="button"
+                                style={{ verticalAlign: "middle" }}
+                                onClick={() => toggleMenu(quiz)}
+                              />
+                              {menuVisible[quiz._id] && (
+                                <div
+                                  className="menu"
+                                  style={{
+                                    position: "absolute",
+                                    top: "100%",
+                                    left: "-50%",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    backgroundColor: "white",
+                                    padding: "8px",
+                                    opacity: 0.9,
+                                    zIndex: 1000,
+                                  }}
+                                >
+                                  <option onClick={() => handleEditQuiz(quiz)}>Edit</option>
+                                  <option
+                                    onClick={() => {
+                                      if (handleDelete()) {
+                                        handleDeleteQuiz(quiz._id);
+                                      }
+                                    }}
+                                  >
+                                    Delete
+                                  </option>
+                                  <option onClick={() => handleTogglePublish(quiz)}>
+                                    {quiz.published ? "Unpublish" : "Publish"}{" "}
+                                  </option>
+                                </div>
+                              )}
+                            </a>
+                          </div>}
+
+                        <div className="dropdown"></div>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>)}
         </ul>
       </div>
     </div>

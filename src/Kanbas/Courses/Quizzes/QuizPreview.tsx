@@ -13,10 +13,11 @@ import { useSelector } from "react-redux";
 import { setQuiz } from "./reducer";
 
 function QuizPreview() {
-  const { quizId, courseId } = useParams();
+  const { quizId, cid } = useParams();
   const [question, setQuestion] = useState<any | null>(null);
   const [questionList, setQuestionList] = useState<any | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: string;
   }>({});
@@ -55,7 +56,7 @@ function QuizPreview() {
   }, [quizId]);
 
   useEffect(() => {
-    findQuizForCourse(courseId)
+    findQuizForCourse(cid)
       .then((quizList) => {
         setQuiz(quizList.find((quiz: any) => quiz?._id === quizId));
       })
@@ -76,7 +77,7 @@ function QuizPreview() {
   const handleSubmitQuiz = () => {
     const currentIndex = 0;
     setQuestion(questionList[currentIndex]);
-    navigate(`/Kanbas/Courses/${courseId}/Quizzes`);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   };
 
   const handleQuestionClick = (questionId: string) => {
@@ -97,9 +98,9 @@ function QuizPreview() {
     <div className="container-fluid" style={{ marginTop: "20px", marginLeft: "25px", marginRight: "20px", width: "1000px" }}>
       <h1>{quiz?.title}</h1>
 
-      <h6 style={{ paddingRight: "100px" }} className="preview-msg">
+      {currentUser.role === "FACULTY" && <h6 style={{ paddingRight: "100px" }} className="preview-msg">
         <CgDanger /> This is a preview of the published version of the quiz
-      </h6>
+      </h6>}
 
       <div>
         <h6>Started: {formatDate(quiz?.availableFromDate)} at {formatTime(quiz?.availableFromDate)}</h6>
@@ -209,9 +210,9 @@ function QuizPreview() {
         style={{ textAlign: "right", paddingBottom: "10px", paddingRight: "40px" }}
       >
         <div style={{ paddingTop: "5px", paddingBottom: "10px" }}>
-          <button className="nextButton" onClick={handleNextQuestion}>
+        <Button variant="primary" className="nextButton" onClick={handleNextQuestion}>
             Next <GoTriangleRight />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -236,30 +237,24 @@ function QuizPreview() {
           }}
         >
           <span>Quiz saved at {formatTime(new Date())}</span>
-          <button
-            style={{
-              marginLeft: "10px"
-            }}
-            onClick={handleSubmitQuiz}
-          >
+          <Button variant="danger" className="submitButton" onClick={handleSubmitQuiz}>
             Submit Quiz
-          </button>
+          </Button>
         </div>
 
       </div>
 
-      <div className="card mt-1 ms-1" style={{ width: "1000px" }}>
+      {currentUser.role === "FACULTY" && <div className="card mt-1 ms-1" style={{ width: "1000px" }}>
         <Link
-          to={`/Kanbas/Courses/${courseId}/Quizzes/${quiz?._id}`}
+          to={`/Kanbas/Courses/${cid}/Quizzes/${quiz?._id}`}
           role="button"
           className="btn btn-light"
-          style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
         >
           <FaPencil style={{ marginRight: "5px" }} />
           <span>Keep Editing This Quiz</span>
         </Link>
-
-      </div>
+      </div>}
       <br />
 
       <div>
