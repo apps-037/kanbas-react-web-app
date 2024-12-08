@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { KanbasState } from "../../../../store";
 import { BsTrash3Fill } from "react-icons/bs";
 import { setText } from "../../../../Common/TextBox/reducer";
+import mongoose from "mongoose";
 
 function QuizQuestion() {
   const navigate = useNavigate();
@@ -20,13 +21,18 @@ function QuizQuestion() {
   );
   const addQuestion = async () => {
     const newReq = {
-      id: new Date().getTime().toString(),
-      title: "New Question",
-      quizId: quizId,
+      id:  new mongoose.Types.ObjectId().toString(),
+      questionText: "New Question",
+      options: [
+        {  option: "Option 1" },
+        {  option: "Option 2" },
+      ],
+      correctOptionIndex: 0,
+      title: "Default Title",
       points: 0,
       question: "",
-      type: "MultipleChoice",
-      option: [],
+      quizId,
+      type: "MultipleChoice"
     };
     const res = await client.createQuestion(quizId, newReq);
     dispatch(setQuestion(newReq));

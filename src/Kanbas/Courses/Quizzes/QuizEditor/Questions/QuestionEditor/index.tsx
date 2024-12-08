@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import TextBox from "../../../../../Common/TextBox/index";
+import TextBox from "../../../../../Common/TextBox/index";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import FillInTheBlank from "./FillInTheBlank";
 import TrueFalse from "./TrueFalse";
@@ -33,7 +33,7 @@ function QuestionEditor() {
   );
 
   useEffect(() => {
-    //setQuestionType(question.type);
+    setQuestionType(question.type);
     checkType();
   }, [questionType]);
 
@@ -47,9 +47,9 @@ function QuestionEditor() {
     checkType();
   }, []);
 
-  const updateQues = () => {
+  const updateQues = async () => {
+    var response = await client.updateQuestion(question);
     dispatch(updateQuestion(question));
-    //var response = await client.updateQuestion(question);
     navigate(
       `/Kanbas/Courses/${courseId}/Quizzes/${quizId}/QuizEditor/questions`
     );
@@ -131,7 +131,7 @@ function QuestionEditor() {
         their answer.
       </p>
       <h2>Question:</h2>
-      {/* <TextBox textData={question?.question}/> */}
+      <TextBox textData={question?.questionText}/>
       {currentQuestionType}
       {!questionType.includes("TrueFalse") && (
         <div className="float-end me-2">
