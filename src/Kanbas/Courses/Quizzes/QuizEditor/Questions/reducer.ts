@@ -40,12 +40,12 @@ const questionsSlice = createSlice({
 
     deleteQuestion: (state, action) => {
       state.questions = state.questions.filter(
-        (question) => question.id !== action.payload
+        (question) => question._id !== action.payload
       );
     },
     updateQuestion: (state, action) => {
       state.questions = state.questions.map((question) => {
-        if (question.id === action.payload.id) {
+        if (question._id === action.payload.id) {
           return action.payload;
         } else {
           return question;

@@ -43,15 +43,15 @@ function QuizQuestion() {
     );
   };
 
-  // useEffect(() => {
-  //   const fetchQuestions = async () => {
-  //     const questions = await client.getAllQuestions(quizId);
-  //     dispatch(setQuestions(questions));
-  //   };
-  //   if (questionList.length === 0 || questionList === null) {
-  //     fetchQuestions();
-  //   }
-  // }, [quizId]);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const questions = await client.getAllQuestions(quizId);
+      dispatch(setQuestions(questions));
+    };
+    if (questionList.length === 0 || questionList === null) {
+      fetchQuestions();
+    }
+  }, [quizId]);
 
   const assignQues = (ques: any) => {
     console.log("Assigning Question ", ques);
@@ -104,7 +104,7 @@ function QuizQuestion() {
                   </Link>
                   <div>
                     <span>{question?.points} pts</span>
-                    <button onClick={() => dispatch(deleteQuestion(question.id))} className="btn">
+                    <button onClick={() => dispatch(deleteQuestion(question._id))} className="btn">
                       <BsTrash3Fill color="red" />
                     </button>
                   </div>
