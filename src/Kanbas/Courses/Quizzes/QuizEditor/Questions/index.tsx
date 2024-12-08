@@ -21,11 +21,11 @@ function QuizQuestion() {
   );
   const addQuestion = async () => {
     const newReq = {
-      id:  new mongoose.Types.ObjectId().toString(),
+      _id: new mongoose.Types.ObjectId().toString(),
       questionText: "New Question",
       options: [
-        {  option: "Option 1" },
-        {  option: "Option 2" },
+        { option: "Option 1" },
+        { option: "Option 2" },
       ],
       correctOptionIndex: 0,
       title: "Default Title",
@@ -37,10 +37,22 @@ function QuizQuestion() {
     // const res = await client.createQuestion(quizId, newReq);
     dispatch(setQuestion(newReq));
     dispatch(setText(newReq.question));
-    dispatch(setQuestions([...questionList, newReq]));
+    // dispatch(setQuestions([...questionList, newReq]));
     navigate(
-      `/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions/${newReq.id}`
+      `/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions/${newReq._id}`
     );
+  };
+
+  const handleDelete = async (questionId: any) => {
+    try {
+      await client.deleteQuestion(quizId, questionId);
+      const updatedQuestions = questionList.filter(
+        (question) => question._id !== questionId
+      );
+      dispatch(setQuestions(updatedQuestions));
+    } catch (error) {
+      alert("Error deleting question.");
+    }
   };
 
   useEffect(() => {
@@ -48,7 +60,8 @@ function QuizQuestion() {
       const questions = await client.getAllQuestions(quizId);
       dispatch(setQuestions(questions));
     };
-    if (questionList.length === 0 || questionList === null) {
+  
+    if (!questionList || questionList.length === 0) {
       fetchQuestions();
     }
   }, [quizId]);
@@ -104,7 +117,7 @@ function QuizQuestion() {
                   </Link>
                   <div>
                     <span>{question?.points} pts</span>
-                    <button onClick={() => dispatch(deleteQuestion(question._id))} className="btn">
+                    <button onClick={() => handleDelete(question._id)} className="btn">
                       <BsTrash3Fill color="red" />
                     </button>
                   </div>

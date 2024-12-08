@@ -22,12 +22,12 @@ export const createQuestion = async (
 
 export const updateQuestion = async (question: any) => {
   console.log("Updating Question", question);
-  const response = await axios.put(`${QUIZZES_API}/questions/${question.id}`, question);
+  const response = await axios.put(`${QUIZZES_API}/questions/${question._id}`, question);
   return response.data;
 };
 
-export const deleteQuestion = async (questionId: string) => {
-  const response = await axios.delete(`${QUIZZES_API}/questions/${questionId}`);
+export const deleteQuestion = async (quizId: any, questionId: string) => {
+  const response = await axios.delete(`${QUIZZES_API}/${quizId}/questions/${questionId}`);
   return response.data;
 };
 

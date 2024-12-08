@@ -57,7 +57,7 @@ const questionsSlice = createSlice({
     },
 
     setQuestion: (state, action) => {
-      state.question = action.payload;
+      state.question = action.payload || null;
     },
 
     resetQuestion: (state) => {

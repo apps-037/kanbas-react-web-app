@@ -57,7 +57,7 @@ function QuestionEditor() {
   };
 
   const cancelQues = () => {
-    dispatch(setQuestion({ title: "", type: "MultipleChoice", options: [], points: 0, questionText: "" }));
+    dispatch(setQuestion(null));
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions`);
   }
 
