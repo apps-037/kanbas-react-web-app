@@ -85,7 +85,7 @@ function QuizPreview() {
               })),
           };
           await quizClient.submitQuiz(payload);
-          navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+          navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizSubmission`);
       } catch (error) {
           console.error("Error submitting quiz:", error);
           alert("An error occurred while submitting the quiz.");

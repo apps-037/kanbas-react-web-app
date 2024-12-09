@@ -224,6 +224,26 @@ function QuizDetail() {
                 }}
               />
               Allow Multiple Attempts
+
+              {quiz.multipleAttempts && (
+                <input
+                  type="number"
+                  value={quiz?.numberOfAttempts}
+                  min={1}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value, 10);
+                    if (value >= 1) {
+                      dispatch(
+                        setQuiz({
+                          ...quiz,
+                          numberOfAttempts: value,
+                        })
+                      );
+                    }
+                  }}
+                  style={{ marginLeft: "16px", width: "60px" }}
+                />
+              )}
               <br />
               <input
                 type="checkbox"

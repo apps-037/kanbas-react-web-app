@@ -12,6 +12,7 @@ interface Quiz {
   shuffleAnswers: boolean;
   timeLimit: String;
   multipleAttempts: boolean;
+  numberOfAttempts: string;
   correctAnswers: boolean;
   oneQuestion: boolean;
   webcam: boolean;
