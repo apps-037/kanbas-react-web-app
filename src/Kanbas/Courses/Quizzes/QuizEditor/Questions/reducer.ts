@@ -15,6 +15,7 @@ interface Question {
   quizId: string;
   type:'MultipleChoice'|'TrueFalse'|'FillBlank';
   options: Option[];
+  correctOptionIndex?: number;
 } 
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
     type: "MultipleChoice",
     quizId: "",
     options: [] as Option[],
+    correctOptionIndex: 0,
   },
 };
 
@@ -88,6 +90,10 @@ const questionsSlice = createSlice({
         (option) => option.id !== action.payload
       );
     },
+
+    setCorrectOptionIndex: (state, action) => {
+      state.question.correctOptionIndex = action.payload;
+    },
   },
 });
 
@@ -101,5 +107,6 @@ export const {
   updateOption,
   deleteOption,
   resetQuestion,
+  setCorrectOptionIndex,
 } = questionsSlice.actions;
 export default questionsSlice.reducer;
