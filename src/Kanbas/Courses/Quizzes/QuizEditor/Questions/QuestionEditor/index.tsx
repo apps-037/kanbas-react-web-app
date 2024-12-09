@@ -118,7 +118,7 @@ function QuestionEditor() {
             dispatch(setQuestion({ ...question, points: e.target.value }));
           }}
           className="form-control"
-          style={{ width: "50px" }}
+          style={{ width: "100px" }}
           type="number"
         />
       </div>

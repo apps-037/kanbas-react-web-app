@@ -11,6 +11,7 @@ import { Button } from "react-bootstrap";
 import { KanbasState } from "../../store";
 import { useSelector } from "react-redux";
 import { setQuiz } from "./reducer";
+import * as quizClient from "./client";
 
 function QuizPreview() {
   const { quizId, cid } = useParams();
@@ -73,11 +74,22 @@ function QuizPreview() {
       setQuestion(questionList[currentIndex + 1]);
     }
   };
-
-  const handleSubmitQuiz = () => {
-    const currentIndex = 0;
-    setQuestion(questionList[currentIndex]);
-    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+  const handleSubmitQuiz = async () => {
+      try {
+          const payload = {
+              studentId: currentUser._id,
+              _id: quizId,
+              answers: Object.entries(selectedOptions).map(([questionId, answer]) => ({
+                  questionId,
+                  answer,
+              })),
+          };
+          await quizClient.submitQuiz(payload);
+          navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+      } catch (error) {
+          console.error("Error submitting quiz:", error);
+          alert("An error occurred while submitting the quiz.");
+      }
   };
 
   const handleQuestionClick = (questionId: string) => {

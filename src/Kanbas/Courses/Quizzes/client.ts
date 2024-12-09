@@ -29,6 +29,14 @@ export const updateQuiz = async (quiz: any) => {
   return response.data;
 };
 
+export const submitQuiz = async (quiz: any) => {
+  const response = await axiosWithCredentials.post(
+    `${QUIZZES_API}/${quiz._id}/submitQuiz`,
+    quiz
+  );
+  return response.data;
+};
+
 export const deleteQuiz = async (quizId: string) => {
   const response = await axiosWithCredentials.delete(`${QUIZZES_API}/${quizId}`);
   return response.data;

@@ -166,7 +166,7 @@ function QuizDetail() {
           <b>Multiple Attempts</b>
         </div>
         <div className="col-sm-1 col-md-2">
-          {quiz.multipleAttempts ? 'No' : 'Yes'}
+          {quiz.multipleAttempts ? 'Yes' : 'No'}
         </div>
       </div>
 
