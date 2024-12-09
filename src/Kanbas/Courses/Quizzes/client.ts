@@ -10,6 +10,11 @@ export const findQuizForCourse = async (courseId: string | undefined) => {
   return response.data;
 };
 
+export const findQuizSubmissionById = async (quizId: string | undefined) => {
+  const response = await axiosWithCredentials.get(`${QUIZZES_API}/${quizId}/submission`);
+  return response.data;
+};
+
 export const createQuiz = async (
   courseId: string | undefined,
   quiz: string

@@ -167,7 +167,7 @@ export default function QuizList() {
                           onClick={(e) => dispatch(setQuiz(quiz))}
                           style={{ color: "green", textDecoration: "none" }}
                           className="fw-bold ps-0"
-                          to={currentUser.role === "FACULTY" ? `${quiz._id}` : `${quiz._id}/QuizPreview`}
+                          to={currentUser.role === "FACULTY" ? `${quiz._id}` : `${quiz._id}/QuizIntroPage`}
                         >
                           {quiz.title}
                         </Link>

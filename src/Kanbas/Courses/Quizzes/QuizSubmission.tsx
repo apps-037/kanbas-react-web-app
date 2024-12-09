@@ -1,17 +1,104 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router';
+import { KanbasState } from '../../store';
+import { findQuizForCourse } from './client';
+import { getAllQuestions } from './QuizEditor/Questions/client';
 import './QuizSubmission.css'; // Add a CSS file for more refined styling.
+import * as quizClient from "./client";
+import { findQuizSubmissionById } from './client';
 
-const QuizSubmission = () => {
+interface Answer {
+    questionId: string;
+    answer: string;
+}
+
+interface Submission {
+    answers: Answer[];
+}
+
+function QuizSubmission() {
+    const { quizId, cid } = useParams();
+    const dispatch = useDispatch();
+    const [question, setQuestion] = useState<any | null>(null);
+    const [questionList, setQuestionList] = useState<any | null>(null);
+    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const [quizData, setQuizData] = useState<any>(null);
+    const [submission, setSubmissionData] = useState<Submission[]>([]);
+    const [correctAnswers, setCorrectAnswers] = useState<Map<string, any>>(new Map());
+    const [incorrectAnswers, setIncorrectAnswers] = useState<Map<string, any>>(new Map());
+
+
+    useEffect(() => {
+        // Fetch questions
+        getAllQuestions(quizId)
+            .then((questions) => {
+                if (questions.length > 0) {
+                    setQuestionList(questions);
+                    setQuestion(questions[0]);
+                }
+            })
+            .catch((error) => console.error("Error fetching quiz questions:", error));
+    }, [quizId]);
+
+    useEffect(() => {
+        quizClient.findQuizById(quizId).then((data) => {
+            setQuizData(data[0]);
+        }).catch((error) => {
+            console.error("Error fetching quiz:", error);
+        });
+    }, [quizId]);
+
+    // const jogs = quizClient.findQuizSubmissionById(quizId);
+    useEffect(() => {
+        findQuizSubmissionById(quizId).then((data) => {
+            setSubmissionData(data);
+        }).catch((error) => {
+            console.error("Error fetching quiz:", error);
+        });
+    }, [quizId]);
+
+    console.log(submission);
+    if (!quizData) {
+        return <div>No quiz data available</div>;
+    }
+
+    // if (questionList.length > 0 && submission.length > 0) {
+    //     const correct = new Map();
+    //     const incorrect = new Map();
+
+    //     submission.answers.forEach((userAnswer) => {
+    //         const question = questionList.find(
+    //             (q: { _id: any; }) => 
+    //             q._id === userAnswer.questionId
+    //         );
+    //         if (question) {
+    //             const correctOption = question.options[question.correctOptionIndex].option;
+    //             if (userAnswer.answer === correctOption) {
+    //                 correct.set(userAnswer.questionId.$oid, question);
+    //             } else {
+    //                 incorrect.set(userAnswer.questionId.$oid, question);
+    //             }
+    //         }
+    //     });
+
+    //     setCorrectAnswers(correct);
+    //     setIncorrectAnswers(incorrect);
+    // }
+
+    console.log(correctAnswers);
+   
     return (
         <div className="quiz-container">
             {/* Quiz Header */}
             <h1 className="quiz-title">Q1</h1>
             <div className="quiz-details">
-                <p><strong>Due:</strong> Sep 20 at 11:59pm</p>
-                <p><strong>Points:</strong> 29</p>
-                <p><strong>Questions:</strong> 11</p>
-                <p><strong>Available:</strong> Sep 16 at 12am - Sep 20 at 11:59pm</p>
-                <p><strong>Time Limit:</strong> 20 Minutes</p>
+                <p><strong>Due:</strong>{quizData.dueDate}</p>
+                <p><strong>Points:</strong>{quizData.points}</p>
+                <p><strong>Questions:</strong> {quizData.questions.length}</p>
+                <p><strong>Available:</strong> {quizData.availableFromDate} - {quizData.dueDate}</p>
+                <p><strong>Time Limit:</strong> {quizData.timeLimit}</p>
             </div>
 
             {/* Attempt History */}
@@ -61,3 +148,4 @@ const QuizSubmission = () => {
 };
 
 export default QuizSubmission;
+
