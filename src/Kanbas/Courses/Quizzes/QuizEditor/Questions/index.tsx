@@ -30,13 +30,12 @@ function QuizQuestion() {
       correctOptionIndex: 0,
       title: "Default Title",
       points: 0,
-      question: "",
       quizId,
       type: "MultipleChoice"
     };
     // const res = await client.createQuestion(quizId, newReq);
     dispatch(setQuestion(newReq));
-    dispatch(setText(newReq.question));
+    dispatch(setText(newReq.questionText));
     // dispatch(setQuestions([...questionList, newReq]));
     navigate(
       `/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions/${newReq._id}`

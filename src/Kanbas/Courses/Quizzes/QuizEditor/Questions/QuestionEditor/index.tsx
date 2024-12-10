@@ -4,75 +4,85 @@ import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import FillInTheBlank from "./FillInTheBlank";
 import TrueFalse from "./TrueFalse";
 import { Button } from "react-bootstrap";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setQuestions,
-  setQuestion,
-  addOption,
-  updateQuestion,
-} from "../reducer";
+import { setQuestion, addOption, updateQuestion } from "../reducer";
 import { KanbasState } from "../../../../../store";
 import * as client from "../client";
-
+ 
 function QuestionEditor() {
   const navigate = useNavigate();
   const { cid, quizId } = useParams();
-
   const dispatch = useDispatch();
-  const [questionType, setQuestionType] = useState("MultipleChoice");
-  const [currentQuestionType, setCurrentQuestionType] = useState(<></>);
-
+ 
   const question = useSelector(
     (state: KanbasState) => state.questionsReducer.question
   );
-
   const textBox = useSelector(
     (state: KanbasState) => state.textBoxReducer.textBox
   );
-
+ 
+  const [currentQuestionTypeComponent, setCurrentQuestionTypeComponent] =
+    useState(<></>);
+ 
   useEffect(() => {
-    setQuestionType(question.type);
-    checkType();
-  }, [questionType]);
-
-  useEffect(() => {
-    dispatch(setQuestion({ ...question, question: textBox.text }));
+    // Whenever textBox changes, update the question text
+    dispatch(setQuestion({ ...question, questionText: textBox.text }));
   }, [textBox]);
-
+ 
   useEffect(() => {
-    console.log("Question Updated", question);
-    setQuestionType(question.type);
     checkType();
-  }, []);
-
+  }, [question.type]);
+ 
   const updateQues = async () => {
-    var response = await client.updateQuestion(question);
+    // Update the question on the server
+    await client.updateQuestion(question);
     dispatch(updateQuestion(question));
-    navigate(
-      `/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions`
-    );
-    //navigate back to the question list
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions`);
   };
-
+ 
   const cancelQues = () => {
     dispatch(setQuestion(null));
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizEditor/questions`);
-  }
-
+  };
+ 
   const checkType = () => {
     let temp = <></>;
-    if (questionType.includes("MultipleChoice")) {
+    if (question.type === "MultipleChoice") {
       temp = <MultipleChoiceQuestion />;
-    } else if (questionType.includes("TrueFalse")) {
+    } else if (question.type === "TrueFalse") {
       temp = <TrueFalse />;
     } else {
       temp = <FillInTheBlank />;
     }
-    setCurrentQuestionType(temp);
+    setCurrentQuestionTypeComponent(temp);
   };
-
+ 
+  const handleTypeChange = (newType: string) => {
+    let updatedOptions: { option: string; }[] = [];
+    if (newType === "MultipleChoice") {
+      updatedOptions = [
+        { option: "Option 1" },
+        { option: "Option 2" },
+        { option: "Option 3" },
+        { option: "Option 4" },
+      ];
+    } else if (newType === "TrueFalse") {
+      updatedOptions = [{ option: "True" }, { option: "False" }];
+    } else if (newType === "FillBlank") {
+      updatedOptions = [{ option: "" }];
+    }
+ 
+    dispatch(
+      setQuestion({
+        ...question,
+        type: newType,
+        options: updatedOptions,
+      })
+    );
+  };
+ 
   return (
     <div>
       <div className="col d-flex align-items-center">
@@ -88,13 +98,10 @@ function QuestionEditor() {
         />
         <select
           className="form-control me-2"
-          value={questionType}
+          value={question.type || "MultipleChoice"}
           style={{ width: "200px" }}
           onChange={(e) => {
-            console.log("Hello");
-            setQuestionType(e.target.value);
-            dispatch(setQuestion({ ...question, type: e.target.value }));
-            dispatch(setQuestion({ ...question, options: [] }));
+            handleTypeChange(e.target.value);
           }}
         >
           <option value="MultipleChoice">Multiple Choice</option>
@@ -122,7 +129,7 @@ function QuestionEditor() {
           type="number"
         />
       </div>
-
+ 
       <hr />
       <p>
         Enter your question text, then define all possible correct answers for
@@ -132,9 +139,12 @@ function QuestionEditor() {
         their answer.
       </p>
       <h2>Question:</h2>
-      <TextBox textData={question?.questionText}/>
-      {currentQuestionType}
-      {!questionType.includes("TrueFalse") && (
+      <TextBox textData={question?.questionText} />
+ 
+      {currentQuestionTypeComponent}
+ 
+      {/* Show Add Another Answer button if not True/False */}
+      {question.type !== "TrueFalse" && (
         <div className="float-end me-2">
           <Button
             type="button"
@@ -147,14 +157,16 @@ function QuestionEditor() {
           </Button>
         </div>
       )}
-
+ 
       <br />
-      <Button className="btn btn-secondary" onClick={()=>{cancelQues()}}>Cancel</Button>
-      <Button onClick={() => updateQues()} className="btn btn-danger ms-2">
+      <Button className="btn btn-secondary" onClick={cancelQues}>
+        Cancel
+      </Button>
+      <Button onClick={updateQues} className="btn btn-danger ms-2">
         Update Question
       </Button>
     </div>
   );
 }
-
+ 
 export default QuestionEditor;
