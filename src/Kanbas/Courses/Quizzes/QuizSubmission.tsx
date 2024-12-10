@@ -1,151 +1,182 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router';
-import { KanbasState } from '../../store';
-import { findQuizForCourse } from './client';
-import { getAllQuestions } from './QuizEditor/Questions/client';
-import './QuizSubmission.css'; // Add a CSS file for more refined styling.
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import "./QuizSubmission.css";
 import * as quizClient from "./client";
-import { findQuizSubmissionById } from './client';
-
-interface Answer {
-    questionId: string;
-    answer: string;
-}
-
-interface Submission {
-    answers: Answer[];
-}
-
+ 
 function QuizSubmission() {
-    const { quizId, cid } = useParams();
-    const dispatch = useDispatch();
-    const [question, setQuestion] = useState<any | null>(null);
-    const [questionList, setQuestionList] = useState<any | null>(null);
-    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { quizId } = useParams();
     const [quizData, setQuizData] = useState<any>(null);
-    const [submission, setSubmissionData] = useState<Submission[]>([]);
-    const [correctAnswers, setCorrectAnswers] = useState<Map<string, any>>(new Map());
-    const [incorrectAnswers, setIncorrectAnswers] = useState<Map<string, any>>(new Map());
-
-
+    const [submission, setSubmissionData] = useState<any[]>([]);
+    const [selectedAttempt, setSelectedAttempt] = useState<number>(0);
+    const [totalScore, setTotalScore] = useState<number>(0);
+ 
+    // Fetch Quiz Data
     useEffect(() => {
-        // Fetch questions
-        getAllQuestions(quizId)
-            .then((questions) => {
-                if (questions.length > 0) {
-                    setQuestionList(questions);
-                    setQuestion(questions[0]);
-                }
+        quizClient
+            .findQuizById(quizId)
+            .then((data) => setQuizData(data[0]))
+            .catch((error) => console.error("Error fetching quiz:", error));
+    }, [quizId]);
+ 
+    // Fetch Submissions
+    useEffect(() => {
+        quizClient
+            .findQuizSubmissionById(quizId)
+            .then((data) => {
+                const sortedSubmissions =
+                    data[0]?.attempts?.sort(
+                        (a: any, b: any) =>
+                            new Date(b.submittedAt).getTime() -
+                            new Date(a.submittedAt).getTime()
+                    ) || [];
+                setSubmissionData(sortedSubmissions);
+                setSelectedAttempt(0); // Default to latest attempt
             })
-            .catch((error) => console.error("Error fetching quiz questions:", error));
+            .catch((error) =>
+                console.error("Error fetching quiz submissions:", error)
+            );
     }, [quizId]);
-
+ 
     useEffect(() => {
-        quizClient.findQuizById(quizId).then((data) => {
-            setQuizData(data[0]);
-        }).catch((error) => {
-            console.error("Error fetching quiz:", error);
+        if (submission[selectedAttempt]) {
+            calculateScore(submission[selectedAttempt]);
+        }
+    }, [selectedAttempt, submission]);
+ 
+    const calculateScore = (attempt: any) => {
+        if (!attempt || !quizData) return;
+ 
+        let score = 0;
+ 
+        attempt.answers.forEach((answer: any) => {
+            const question = quizData.questions.find(
+                (q: any) => q._id === answer.questionId
+            );
+ 
+            if (question) {
+                const userAnswerIndex = parseInt(answer.answer, 10);
+                if (userAnswerIndex === question.correctOptionIndex) {
+                    score += question.points || 0; // Add question points to score
+                }
+            }
         });
-    }, [quizId]);
-
-    // const jogs = quizClient.findQuizSubmissionById(quizId);
-    useEffect(() => {
-        findQuizSubmissionById(quizId).then((data) => {
-            setSubmissionData(data);
-        }).catch((error) => {
-            console.error("Error fetching quiz:", error);
-        });
-    }, [quizId]);
-
-    console.log(submission);
-    if (!quizData) {
-        return <div>No quiz data available</div>;
-    }
-
-    // if (questionList.length > 0 && submission.length > 0) {
-    //     const correct = new Map();
-    //     const incorrect = new Map();
-
-    //     submission.answers.forEach((userAnswer) => {
-    //         const question = questionList.find(
-    //             (q: { _id: any; }) => 
-    //             q._id === userAnswer.questionId
-    //         );
-    //         if (question) {
-    //             const correctOption = question.options[question.correctOptionIndex].option;
-    //             if (userAnswer.answer === correctOption) {
-    //                 correct.set(userAnswer.questionId.$oid, question);
-    //             } else {
-    //                 incorrect.set(userAnswer.questionId.$oid, question);
-    //             }
-    //         }
-    //     });
-
-    //     setCorrectAnswers(correct);
-    //     setIncorrectAnswers(incorrect);
-    // }
-
-    console.log(correctAnswers);
-   
+ 
+        setTotalScore(score);
+    };
+ 
+    const handleAttemptSelection = (attemptIndex: number) => {
+        setSelectedAttempt(attemptIndex);
+    };
+ 
+    const renderQuestion = (question: any, answer: any, index: number) => {
+        const userAnswerIndex = parseInt(answer.answer, 10);
+        const correctOptionIndex = question.correctOptionIndex;
+ 
+        return (
+            <div key={question._id} className="question-card">
+                <h4>
+                    Question {index + 1}: {question.title}
+                </h4>
+                <p>{question.questionText}</p>
+                <ul>
+                    {question.options.map((option: any, idx: number) => {
+                        const isCorrect = idx === correctOptionIndex;
+                        const isUserAnswer = idx === userAnswerIndex;
+ 
+                        return (
+                            <li
+                                key={option._id}
+                                className={`option ${isCorrect
+                                        ? "correct"
+                                        : isUserAnswer
+                                            ? "incorrect"
+                                            : ""
+                                    }`}
+                            >
+                                {option.option}
+                                {isCorrect && (
+                                    <span className="badge">Correct Answer</span>
+                                )}
+                                {isUserAnswer && (
+                                    <span className="badge incorrect">Your Answer</span>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
+        );
+    };
+ 
+    const renderAttemptResult = (attempt: any) => {
+        if (!attempt || !quizData) return <p>No submission data available.</p>;
+ 
+        return (
+            <div>
+                <h3>
+                    Submitted At: {new Date(attempt.submittedAt).toLocaleString()}
+                </h3>
+                {attempt.answers.map((answer: any, index: number) => {
+                    const question = quizData.questions.find(
+                        (q: any) => q._id === answer.questionId
+                    );
+                    return question ? (
+                        renderQuestion(question, answer, index)
+                    ) : (
+                        <p key={answer._id}>Question not found</p>
+                    );
+                })}
+            </div>
+        );
+    };
+ 
     return (
         <div className="quiz-container">
             {/* Quiz Header */}
-            <h1 className="quiz-title">Q1</h1>
+            <h1 className="quiz-title">{quizData?.title}</h1>
             <div className="quiz-details">
-                <p><strong>Due:</strong>{quizData.dueDate}</p>
-                <p><strong>Points:</strong>{quizData.points}</p>
-                <p><strong>Questions:</strong> {quizData.questions.length}</p>
-                <p><strong>Available:</strong> {quizData.availableFromDate} - {quizData.dueDate}</p>
-                <p><strong>Time Limit:</strong> {quizData.timeLimit}</p>
+                <p>
+                    <strong>Total Score:</strong> {totalScore}/
+                    {quizData?.points || "N/A"}
+                </p>
+                <p>
+                    <strong>Due:</strong>{" "}
+                    {quizData?.dueDate
+                        ? new Date(quizData.dueDate).toLocaleString()
+                        : "N/A"}
+                </p>
+                <p>
+                    <strong>Points:</strong> {quizData?.points || "N/A"}
+                </p>
             </div>
-
-            {/* Attempt History */}
+ 
+            {/* Attempt Selection */}
             <div className="attempt-history">
                 <h2>Attempt History</h2>
-                <div className="attempt-row">
-                    <div><strong>Attempt:</strong> Attempt 1</div>
-                    <div><strong>Time:</strong> 11 minutes</div>
-                    <div><strong>Score:</strong> 29 out of 29</div>
-                </div>
-                <p>Submitted Sep 19 at 10:14pm</p>
-                <p>This attempt took 11 minutes.</p>
+                {submission.length > 0 ? (
+                    <div>
+                        {submission.map((attempt, index) => (
+                            <button
+                                key={index}
+                                className={`attempt-button ${selectedAttempt === index ? "selected" : ""
+                                    }`}
+                                onClick={() => handleAttemptSelection(index)}
+                            >
+                                Attempt {submission.length - index}
+                            </button>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No attempts available.</p>
+                )}
             </div>
-
-            {/* Questions Section */}
+ 
+            {/* Attempt Results */}
             <div className="questions-section">
-                <h3 className="question-title">Question 1</h3>
-                <p>
-                    An HTML <strong>label</strong> element can be associated with an HTML <strong>input</strong> element
-                    by setting their <strong>id</strong> attributes to the same value.
-                </p>
-                <p>
-                    The resulting effect is that when you click on the <strong>label</strong> text, the input element
-                    receives focus as if you had clicked on the <strong>input</strong> element itself.
-                </p>
-                <div className="answers">
-                    <label>
-                        <input type="radio" name="q1" value="true" />
-                        True
-                    </label>
-                    <label>
-                        <input type="radio" name="q1" value="false" />
-                        False
-                    </label>
-                </div>
-                <div className="correct-label">Correct!</div>
-            </div>
-
-            {/* Add Comment Section */}
-            <div className="comment-section">
-                <h3>Add a Comment:</h3>
-                <textarea className="comment-box" placeholder="Type your comment here..."></textarea>
-                <button className="save-button">Save</button>
+                {renderAttemptResult(submission[selectedAttempt])}
             </div>
         </div>
     );
-};
-
+}
+ 
 export default QuizSubmission;
-

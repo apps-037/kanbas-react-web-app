@@ -1,82 +1,80 @@
-/* QuizSubmission.css */
 .quiz-container {
-    font-family: 'Arial, sans-serif';
+    font-family: "Arial, sans-serif";
     margin: 20px auto;
-    max-width: 800px;
+    max-width: 1400px;
     line-height: 1.5;
     color: #333;
-}
-
-.quiz-title {
+  }
+  
+  .quiz-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
-}
-
-.quiz-details p {
+  }
+  
+  .quiz-details p {
     margin: 5px 0;
-}
-
-.attempt-history {
+  }
+  
+  .attempt-history {
     border-top: 1px solid #ccc;
     padding-top: 10px;
     margin: 20px 0;
-}
-
-.attempt-row {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
-}
-
-.questions-section {
-    border-top: 1px solid #ccc;
-    padding-top: 20px;
-}
-
-.question-title {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.answers {
-    margin: 10px 0;
-}
-
-.answers label {
-    display: block;
-    margin: 5px 0;
-}
-
-.correct-label {
-    color: green;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.comment-section {
-    margin-top: 30px;
-}
-
-.comment-box {
-    width: 100%;
-    height: 80px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+  }
+  
+  .attempt-button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: 1px solid #007bff;
     border-radius: 5px;
-}
-
-.save-button {
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    background-color: white;
+    color: #007bff;
     cursor: pointer;
-    font-size: 14px;
-}
-
-.save-button:hover {
-    background: #0056b3;
-}
+  }
+  
+  .attempt-button.selected {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .questions-section {
+    margin-top: 20px;
+  }
+  
+  .question-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 6px;
+  }
+  
+  .option {
+    padding: 10px;
+    border-radius: 4px;
+    margin: 5px 0;
+  }
+  
+  .option.correct {
+    background-color: #d4edda;
+    color: #155724;
+    font-weight: bold;
+  }
+  
+  .option.incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .badge {
+    font-size: 12px;
+    margin-left: 10px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .badge.incorrect {
+    background-color: #dc3545;
+  }

@@ -12,17 +12,18 @@ import { KanbasState } from "../../store";
 import { useSelector } from "react-redux";
 import { setQuiz } from "./reducer";
 import * as quizClient from "./client";
-
+ 
 function QuizPreview() {
   const { quizId, cid } = useParams();
   const [question, setQuestion] = useState<any | null>(null);
   const [questionList, setQuestionList] = useState<any | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+ 
   const [selectedOptions, setSelectedOptions] = useState<{
-    [key: string]: string;
+    [key: string]: number | string; // Mixed types for different question types
   }>({});
-
+ 
   const formatDate = (dateString: string | number | Date) => {
     return new Date(dateString).toLocaleString('en-US', {
       month: 'short',
@@ -36,13 +37,13 @@ function QuizPreview() {
       hour12: true
     });
   };
-
+ 
   const navigate = useNavigate();
-
+ 
   const quiz = useSelector((state: KanbasState) => state.quizReducer.quiz);
   // const questionList = useSelector((state: KanbasState) => state.questionsReducer.questions);
   useEffect(() => { }, [selectedAnswer]);
-
+ 
   useEffect(() => {
     getAllQuestions(quizId)
       .then((questionList) => {
@@ -55,7 +56,7 @@ function QuizPreview() {
         console.error("Error fetching quiz questions:", error);
       });
   }, [quizId]);
-
+ 
   useEffect(() => {
     findQuizForCourse(cid)
       .then((quizList) => {
@@ -64,8 +65,8 @@ function QuizPreview() {
       .catch((error) => {
         console.error("Error fetching quiz questions:", error);
       });
-  }, [quizId]);
-
+  }, [quizId])
+ 
   const handleNextQuestion = () => {
     const currentIndex = questionList?.findIndex(
       (q: any) => q?._id === question?._id
@@ -74,54 +75,60 @@ function QuizPreview() {
       setQuestion(questionList[currentIndex + 1]);
     }
   };
+ 
   const handleSubmitQuiz = async () => {
-      try {
-          const payload = {
-              studentId: currentUser._id,
-              _id: quizId,
-              answers: Object.entries(selectedOptions).map(([questionId, answer]) => ({
-                  questionId,
-                  answer,
-              })),
-          };
-          await quizClient.submitQuiz(payload);
-          navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizSubmission`);
-      } catch (error) {
-          console.error("Error submitting quiz:", error);
-          alert("An error occurred while submitting the quiz.");
-      }
+    try {
+      const payload = {
+        studentId: currentUser._id,
+        _id: quizId,
+        attempts: [
+          {
+            answers: Object.entries(selectedOptions).map(([questionId, answer]) => ({
+              questionId,
+              answer,
+            })),
+          },
+        ],
+      };
+ 
+      await quizClient.submitQuiz(payload);
+      navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/QuizSubmission`);
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      alert("An error occurred while submitting the quiz.");
+    }
   };
-
+ 
   const handleQuestionClick = (questionId: string) => {
     const selectedQuestion = questionList.find((q: any) => q._id === questionId);
     if (selectedQuestion) {
       setQuestion(selectedQuestion);
     }
   };
-
-  const handleOptionChange = (questionId: string, option: string) => {
+ 
+  const handleOptionChange = (questionId: string, option: number | string) => {
     setSelectedOptions((prevSelectedOptions) => ({
       ...prevSelectedOptions,
       [questionId]: option,
     }));
   };
-
+ 
   return (
     <div className="container-fluid" style={{ marginTop: "20px", marginLeft: "25px", marginRight: "20px", width: "1000px" }}>
       <h1>{quiz?.title}</h1>
-
+ 
       {currentUser.role === "FACULTY" && <h6 style={{ paddingRight: "100px" }} className="preview-msg">
         <CgDanger /> This is a preview of the published version of the quiz
       </h6>}
-
+ 
       <div>
         <h6>Started: {formatDate(quiz?.availableFromDate)} at {formatTime(quiz?.availableFromDate)}</h6>
       </div>
-
+ 
       <h2>Quiz Instructions</h2>
-
+ 
       <hr className="line" />
-
+ 
       <div style={{ paddingRight: "40px", paddingLeft: "40px", paddingTop: "10px" }}>
         {questionList?.length === 0 || questionList === null ? (
           <div className="card text-muted" style={{ marginBottom: "20px" }}>
@@ -157,8 +164,8 @@ function QuizPreview() {
                           type="radio"
                           id={`option-${question._id}-${index}`}
                           name="answer"
-                          checked={option.option === selectedOptions[question._id]}
-                          onChange={() => handleOptionChange(question._id, option.option)}
+                          checked={index === selectedOptions[question._id]}
+                          onChange={() => handleOptionChange(question._id, index)}
                         />
                         <label htmlFor={`option-${question._id}-${index}`} style={{ marginLeft: "20px" }}>
                           {option.option}
@@ -222,12 +229,12 @@ function QuizPreview() {
         style={{ textAlign: "right", paddingBottom: "10px", paddingRight: "40px" }}
       >
         <div style={{ paddingTop: "5px", paddingBottom: "10px" }}>
-        <Button variant="primary" className="nextButton" onClick={handleNextQuestion}>
+          <Button variant="primary" className="nextButton" onClick={handleNextQuestion}>
             Next <GoTriangleRight />
           </Button>
         </div>
       </div>
-
+ 
       <div
         style={{
           display: "flex",
@@ -253,9 +260,9 @@ function QuizPreview() {
             Submit Quiz
           </Button>
         </div>
-
+ 
       </div>
-
+ 
       {currentUser.role === "FACULTY" && <div className="card mt-1 ms-1" style={{ width: "1000px" }}>
         <Link
           to={`/Kanbas/Courses/${cid}/Quizzes/${quiz?._id}`}
@@ -268,7 +275,7 @@ function QuizPreview() {
         </Link>
       </div>}
       <br />
-
+ 
       <div>
         <h4 className="mt-1 ms-1">Questions</h4>
         {questionList?.map((q: any, index: number) => (
@@ -286,5 +293,5 @@ function QuizPreview() {
     </div>
   );
 }
-
+ 
 export default QuizPreview;

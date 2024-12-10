@@ -56,15 +56,17 @@ function QuizQuestion() {
   };
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      const questions = await client.getAllQuestions(quizId);
-      dispatch(setQuestions(questions));
-    };
+    if (quizId && quizId !== "QuizDetail") {
+      const fetchQuestions = async () => {
+        const questions = await client.getAllQuestions(quizId);
+        dispatch(setQuestions(questions));
+      };
   
-    if (!questionList || questionList.length === 0) {
-      fetchQuestions();
+      if (!questionList || questionList.length === 0) {
+        fetchQuestions();
+      }
     }
-  }, [quizId]);
+  }, [quizId, questionList]);
 
   const assignQues = (ques: any) => {
     console.log("Assigning Question ", ques);
