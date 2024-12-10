@@ -110,12 +110,15 @@ export default function QuizList() {
               <FaEllipsisV />
             </a>
           </div>
-          <div className="wd-button float-end">
-            <Button variant="danger btn-sm" onClick={navigateToAddQuiz}>
-              <FaPlus className="me-1" />
-              Quiz
-            </Button>{" "}
-          </div>
+
+          {currentUser.role === "FACULTY" && (
+            <div className="wd-button float-end">
+              <Button variant="danger btn-sm" onClick={navigateToAddQuiz}>
+                <FaPlus className="me-1" />
+                Quiz
+              </Button>{" "}
+            </div>
+          )}
 
           <div className="float-start w-25">
             <input
